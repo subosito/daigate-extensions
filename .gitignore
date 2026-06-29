@@ -1,0 +1,15 @@
+# Binaries
+daigate-stock
+bin/
+*.exe
+*.test
+
+# Local operator config (copy from examples/)
+daigate.yaml
+providers.yaml
+broker.db
+*.db-shm
+*.db-wal
+
+# Go
+/vendor/

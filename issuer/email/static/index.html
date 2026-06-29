@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gateway</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #fff;
+      --text: #1a1d21;
+      --muted: #5c6570;
+      --border: #e2e6eb;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --ok: #15803d;
+      --err: #b91c1c;
+      --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem 4rem;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 0 0.35rem;
+    }
+    .lead {
+      color: var(--muted);
+      margin: 0;
+      font-size: 0.95rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.35rem;
+      margin-bottom: 1rem;
+    }
+    .card h2 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin: 0 0 1rem;
+    }
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.35rem;
+    }
+    input {
+      width: 100%;
+      font: inherit;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
+    }
+    input:focus {
+      outline: 2px solid rgba(37, 99, 235, 0.35);
+      border-color: var(--accent);
+    }
+    button {
+      font: inherit;
+      font-weight: 500;
+      padding: 0.55rem 1rem;
+      border: none;
+      border-radius: 6px;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover { background: var(--accent-hover); }
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+    button.secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--border);
+    }
+    button.secondary:hover { background: var(--bg); }
+    button.loading {
+      position: relative;
+      pointer-events: none;
+    }
+    button .spinner {
+      display: none;
+      width: 1em;
+      height: 1em;
+      margin-right: 0.45em;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: -0.15em;
+    }
+    button.secondary .spinner {
+      border-color: rgba(37, 99, 235, 0.25);
+      border-top-color: var(--accent);
+    }
+    button.loading .spinner { display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin: 0 0 0.75rem;
+    }
+    .msg {
+      font-size: 0.875rem;
+      margin-top: 0.75rem;
+      min-height: 1.25rem;
+    }
+    .msg.ok { color: var(--ok); }
+    .msg.err { color: var(--err); }
+    .hidden { display: none !important; }
+    .steps { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .step {
+      flex: 1;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .step.active {
+      color: var(--accent);
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+    .step.done { color: var(--ok); border-color: var(--ok); }
+    pre, code {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+    }
+    pre {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.85rem 1rem;
+      overflow-x: auto;
+      margin: 0.5rem 0 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .key-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: stretch;
+    }
+    .key-row input { margin-bottom: 0; font-family: var(--mono); font-size: 0.8rem; }
+    .key-row button { white-space: nowrap; }
+    ul.models {
+      margin: 0.25rem 0 0;
+      padding-left: 1.2rem;
+      font-size: 0.875rem;
+    }
+    ul.models li { margin: 0.15rem 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="header">
+      <h1 id="title">Gateway</h1>
+      <p class="lead" id="lead">Sign in with your work email to get an OpenAI-compatible API key.</p>
+    </header>
+
+    <div class="steps" id="steps">
+      <div class="step active" data-step="1">1. Email</div>
+      <div class="step" data-step="2">2. Code</div>
+      <div class="step" data-step="3">3. Use key</div>
+    </div>
+
+    <section class="card" id="panel-email">
+      <h2>Request login code</h2>
+      <p class="hint" id="domain-hint"></p>
+      <label for="email">Work email</label>
+      <input id="email" type="email" autocomplete="email" placeholder="you@company.com">
+      <button type="button" id="btn-request" data-label="Send code">
+        <span class="spinner" aria-hidden="true"></span><span class="btn-label">Send code</span>
+      </button>
+      <p class="msg" id="msg-request"></p>
+    </section>
+
+    <section class="card hidden" id="panel-code">
+      <h2>Enter verification code</h2>
+      <p class="hint" id="code-hint">Check your inbox for a 6-digit code.</p>
+      <label for="code">Verification code</label>
+      <input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456">
+      <button type="button" id="btn-verify" data-label="Verify &amp; get API key">
+        <span class="spinner" aria-hidden="true"></span><span class="btn-label">Verify &amp; get API key</span>
+      </button>
+      <button type="button" class="secondary" id="btn-back" style="margin-left:0.5rem">Change email</button>
+      <p class="msg" id="msg-verify"></p>
+    </section>
+
+    <section class="card hidden" id="panel-key">
+      <h2>Your API key</h2>
+      <p class="hint">Copy this now — it won't be shown again.</p>
+      <div class="key-row">
+        <input id="api-key" type="text" readonly>
+        <button type="button" id="btn-copy">Copy</button>
+      </div>
+      <p class="msg ok" id="msg-copy"></p>
+    </section>
+
+    <section class="card hidden" id="panel-usage">
+      <h2>How to use it</h2>
+      <p class="hint">Works with any OpenAI-compatible client or SDK.</p>
+      <p><strong>Environment variables</strong></p>
+      <pre id="env-block"></pre>
+      <p style="margin-top:1rem"><strong>curl example</strong></p>
+      <pre id="curl-block"></pre>
+      <p style="margin-top:1rem"><strong>Available models</strong></p>
+      <ul class="models" id="model-list"></ul>
+    </section>
+  </div>
+
+  <script>
+    let SETUP = null;
+
+    const $ = (id) => document.getElementById(id);
+    const emailInput = $("email");
+    const codeInput = $("code");
+    const domainHint = $("domain-hint");
+
+    async function loadSetup() {
+      const res = await fetch("setup.json", { credentials: "same-origin" });
+      if (!res.ok) throw new Error("Could not load setup.");
+      SETUP = await res.json();
+      const name = SETUP.title || "Gateway";
+      document.title = name;
+      $("title").textContent = name;
+      $("lead").textContent =
+        "Sign in with your work email to get an OpenAI-compatible API key";
+      $("code-hint").textContent = "Check your inbox for a 6-digit code from " + name + ".";
+      if (SETUP.allowed_domains && SETUP.allowed_domains.length) {
+        const list = SETUP.allowed_domains.map((d) => "@" + d).join(", ");
+        domainHint.textContent = "Allowed addresses: " + list;
+      } else {
+        domainHint.textContent = "Any email domain is accepted.";
+      }
+    }
+
+    function setStep(n) {
+      document.querySelectorAll(".step").forEach((el) => {
+        const s = Number(el.dataset.step);
+        el.classList.toggle("active", s === n);
+        el.classList.toggle("done", s < n);
+      });
+    }
+
+    function showPanel(name) {
+      $("panel-email").classList.toggle("hidden", name !== "email");
+      $("panel-code").classList.toggle("hidden", name !== "code");
+      const done = name === "key";
+      $("panel-key").classList.toggle("hidden", !done);
+      $("panel-usage").classList.toggle("hidden", !done);
+      if (done) setStep(3);
+      else if (name === "code") setStep(2);
+      else setStep(1);
+    }
+
+    function domainOK(addr) {
+      if (!SETUP.allowed_domains || !SETUP.allowed_domains.length) return true;
+      const at = addr.lastIndexOf("@");
+      if (at < 1) return false;
+      const domain = addr.slice(at + 1).toLowerCase();
+      return SETUP.allowed_domains.some((d) => domain === d.toLowerCase());
+    }
+
+    function setMsg(el, text, kind) {
+      el.textContent = text || "";
+      el.classList.toggle("ok", kind === "ok");
+      el.classList.toggle("err", kind === "err");
+    }
+
+    function setLoading(btn, loading, busyLabel) {
+      btn.disabled = loading;
+      btn.classList.toggle("loading", loading);
+      const label = btn.querySelector(".btn-label");
+      if (label) {
+        label.textContent = loading ? busyLabel : (btn.dataset.label || label.textContent);
+      }
+    }
+
+    $("btn-request").addEventListener("click", async () => {
+      const email = emailInput.value.trim();
+      setMsg($("msg-request"), "", "");
+      if (!email) {
+        setMsg($("msg-request"), "Enter your email address.", "err");
+        return;
+      }
+      if (!domainOK(email)) {
+        setMsg($("msg-request"), "That email domain is not allowed.", "err");
+        return;
+      }
+      setLoading($("btn-request"), true, "Sending…");
+      try {
+        const res = await fetch(SETUP.request_path, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || res.statusText);
+        }
+        const data = await res.json();
+        const mins = Math.round((data.expires_in_sec || 900) / 60);
+        setMsg($("msg-request"), "Code sent. It expires in about " + mins + " minutes.", "ok");
+        showPanel("code");
+        codeInput.focus();
+      } catch (err) {
+        setMsg($("msg-request"), err.message || "Request failed.", "err");
+      } finally {
+        setLoading($("btn-request"), false, "");
+      }
+    });
+
+    $("btn-back").addEventListener("click", () => {
+      showPanel("email");
+      setMsg($("msg-verify"), "", "");
+    });
+
+    $("btn-verify").addEventListener("click", async () => {
+      const email = emailInput.value.trim();
+      const code = codeInput.value.trim();
+      setMsg($("msg-verify"), "", "");
+      if (!code) {
+        setMsg($("msg-verify"), "Enter the 6-digit code.", "err");
+        return;
+      }
+      setLoading($("btn-verify"), true, "Verifying…");
+      try {
+        const res = await fetch(SETUP.verify_path, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, code }),
+        });
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || res.statusText);
+        }
+        const data = await res.json();
+        if (!data.key) throw new Error("No key returned.");
+        $("api-key").value = data.key;
+        fillUsage(data.key);
+        showPanel("key");
+      } catch (err) {
+        setMsg($("msg-verify"), err.message || "Verification failed.", "err");
+      } finally {
+        setLoading($("btn-verify"), false, "");
+      }
+    });
+
+    function fillUsage(key) {
+      const base = SETUP.data_base_url;
+      const model = (SETUP.models && SETUP.models[0]) || "gpt-5.4-mini";
+      $("env-block").textContent =
+        "export OPENAI_BASE_URL=" + base + "\n" +
+        "export OPENAI_API_KEY=" + key + "\n" +
+        "export OPENAI_MODEL=" + model;
+      $("curl-block").textContent =
+        'curl ' + base + '/chat/completions \\\n' +
+        '  -H "Authorization: Bearer ' + key + '" \\\n' +
+        '  -H "Content-Type: application/json" \\\n' +
+        '  -d \'{"model":"' + model + '","messages":[{"role":"user","content":"Hello"}]}\'';
+      const list = $("model-list");
+      list.innerHTML = "";
+      (SETUP.models || []).forEach((m) => {
+        const li = document.createElement("li");
+        li.textContent = m;
+        list.appendChild(li);
+      });
+    }
+
+    $("btn-copy").addEventListener("click", async () => {
+      const key = $("api-key").value;
+      try {
+        await navigator.clipboard.writeText(key);
+        setMsg($("msg-copy"), "Copied to clipboard.", "ok");
+      } catch {
+        $("api-key").select();
+        document.execCommand("copy");
+        setMsg($("msg-copy"), "Copied to clipboard.", "ok");
+      }
+    });
+
+    codeInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") $("btn-verify").click();
+    });
+    emailInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") $("btn-request").click();
+    });
+
+    loadSetup().catch((err) => {
+      domainHint.textContent = err.message || "Setup failed.";
+      domainHint.style.color = "var(--err)";
+    });
+  </script>
+</body>
+</html>
