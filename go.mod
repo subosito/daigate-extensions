@@ -3,7 +3,7 @@ module github.com/subosito/daigate-extensions
 go 1.26.2
 
 require (
-	github.com/subosito/daigate v0.0.0
+	github.com/subosito/daigate v0.0.0-20260630033045-728799f4a929
 	gopkg.in/yaml.v3 v3.0.1
 	modernc.org/sqlite v1.53.0
 )
@@ -44,5 +44,3 @@ require (
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect
 )
-
-replace github.com/subosito/daigate => ../daigate

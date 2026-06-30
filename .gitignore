@@ -13,3 +13,5 @@ broker.db
 
 # Go
 /vendor/
+go.local.mod
+go.local.sum

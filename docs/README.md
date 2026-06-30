@@ -6,6 +6,8 @@ Link from an operator binary that already embeds `github.com/subosito/daigate`.
 
 **Module:** `github.com/subosito/daigate-extensions` · **Go:** 1.26
 
+**Catalog routing:** ambiguous model+wire pairs use **`X-Catalog-Modality`** (yaml `modalities.<key>` — operator-defined; see `daigate/docs/catalog.md`). Hosts map product-specific headers before ingress. `gateway.WrapDataHandler` for middleware.
+
 ---
 
 ## Components
@@ -61,5 +63,3 @@ just          # go vet + go test -race
 ```
 
 CI: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml).
-
-Local monorepo: `replace github.com/subosito/daigate => ../daigate` in `go.mod`.

@@ -47,8 +47,6 @@ Keep `register` in a subpackage so importing `vault` or `issuer/email` for types
 just          # go vet + go test -race ./...
 ```
 
-Local monorepo: gitignored `go.work` with `replace` to sibling checkouts.
-
 ## Making changes
 
 - **New translate adapter** → `adapters/<name>/`, add to `compose/ExtAdapters()`, add `docs/adapters/<name>.md`

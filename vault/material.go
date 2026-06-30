@@ -50,11 +50,22 @@ func MaterialFromKV(profile string, data map[string]any) (store.Material, error)
 		if email, ok := data["email"].(string); ok {
 			mat.Email = email
 		}
-		if account, ok := data["account_id"].(string); ok {
-			mat.AccountID = account
+		extras := map[string]string{}
+		if raw, ok := data["extras"].(map[string]any); ok {
+			for k, v := range raw {
+				if s, ok := v.(string); ok && s != "" {
+					extras[k] = s
+				}
+			}
 		}
-		if project, ok := data["project_id"].(string); ok {
-			mat.ProjectID = project
+		if account, ok := data["account_id"].(string); ok && account != "" {
+			extras["account_id"] = account
+		}
+		if project, ok := data["project_id"].(string); ok && project != "" {
+			extras["project_id"] = project
+		}
+		if len(extras) > 0 {
+			mat.Extras = extras
 		}
 		return mat, nil
 	default:
