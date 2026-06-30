@@ -3,7 +3,7 @@ module github.com/subosito/daigate-extensions
 go 1.26.2
 
 require (
-	github.com/subosito/daigate v0.0.0-20260630033045-728799f4a929
+	github.com/subosito/daigate v0.0.0-20260630100950-7f3b464eca4c
 	gopkg.in/yaml.v3 v3.0.1
 	modernc.org/sqlite v1.53.0
 )

@@ -37,7 +37,6 @@ func TestSpeechTranslateOpenAIToElevenLabs(t *testing.T) {
 		Target: catalog.Target{
 			BaseURL:       up.URL,
 			UpstreamModel: "eleven_multilingual_v2",
-			InjectPreset:  "xi-api-key",
 		},
 		Material: store.Material{Kind: store.KindAPIKey, APIKey: "el-key"},
 	}

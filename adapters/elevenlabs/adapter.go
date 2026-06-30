@@ -2,7 +2,11 @@ package elevenlabs
 
 import (
 	"github.com/subosito/daigate/adaptersdk"
+	"github.com/subosito/daigate/credential/inject"
 )
+
+// DefaultInject applies when providers.yaml omits inject (override with inject: map if needed).
+var DefaultInject = inject.Spec{"xi-api-key": "${key}"}
 
 // Adapter registers ElevenLabs translate speech.
 //
@@ -11,7 +15,7 @@ import (
 //	providers:
 //	  elevenlabs:
 //	    credential_profile: elevenlabs
-//	    inject_preset: xi-api-key
+//	    # inject: { xi-api-key: "${key}" }   # optional override; default from adapter
 //	    surfaces:
 //	      speech:
 //	        adapter: elevenlabs

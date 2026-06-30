@@ -68,7 +68,12 @@ func (h *SpeechHandler) Forward(ctx context.Context, client *http.Client, t hand
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("Accept", elevenlabsAccept(req.ResponseFormat))
 	inject.CopyHeaders(httpReq, hdr)
-	inject.Apply(t.Material, httpReq, t.InjectPreset)
+	if err := inject.ApplyRoute(t.Material, httpReq, inject.Route{
+		Spec:   t.Inject,
+		Preset: t.InjectPreset,
+	}, inject.AdapterDefault{Spec: DefaultInject}); err != nil {
+		return nil, err
+	}
 	return observability.HTTPDo(ctx, client, httpReq)
 }
 

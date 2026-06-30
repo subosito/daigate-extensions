@@ -25,7 +25,7 @@ Register in your operator binary via `compose.FromConfig` (included in `ExtAdapt
 providers:
   elevenlabs:
     credential_profile: elevenlabs
-    inject_preset: xi-api-key
+    # inject optional — adapter defaults to xi-api-key
     surfaces:
       speech:
         adapter: elevenlabs
@@ -55,4 +55,11 @@ Import the upstream API key: `daigate credential import elevenlabs --api-key <ke
 | `response_format` | `output_format` query + `Accept` header (`mp3`, `opus`, `wav`, …) |
 | catalog `model` | `model_id` (JSON body) |
 
-Credential inject uses `xi-api-key` preset on the outbound request.
+Credential inject uses `xi-api-key` by default (`DefaultInject` in adapter code). Override in yaml:
+
+```yaml
+inject:
+  xi-api-key: "${key}"
+```
+
+See [daigate catalog-inject.md](https://github.com/subosito/daigate/blob/main/docs/catalog-inject.md).
