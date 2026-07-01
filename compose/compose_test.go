@@ -16,12 +16,8 @@ func TestFromConfigPassthroughOnly(t *testing.T) {
 	}
 }
 
-func TestFromConfigElevenLabs(t *testing.T) {
-	reg, err := compose.FromConfig([]string{"passthrough", "elevenlabs"})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if reg.SpeechAdapters["elevenlabs"] == nil {
-		t.Fatal("expected elevenlabs speech adapter")
+func TestExtAdaptersEmpty(t *testing.T) {
+	if len(compose.ExtAdapters()) != 0 {
+		t.Fatal("expected no bundled extension adapters")
 	}
 }

@@ -11,7 +11,6 @@ Link from an operator binary that embeds `github.com/subosito/daigate`. Ships cr
 | Package | Doc |
 |---------|-----|
 | `compose` | [docs/compose.md](docs/compose.md) |
-| `adapters/elevenlabs` | [docs/adapters/elevenlabs.md](docs/adapters/elevenlabs.md) |
 | `vault` | [docs/vault.md](docs/vault.md) |
 | `issuer/email` | [docs/issuer-email.md](docs/issuer-email.md) |
 | `vault/register`, `issuer/email/register` | [docs/register.md](docs/register.md) |
@@ -22,7 +21,6 @@ Hub: [docs/README.md](docs/README.md)
 
 ```text
 compose/
-adapters/elevenlabs/
 vault/ + vault/register/
 issuer/email/ + issuer/email/register/
 docs/

@@ -15,7 +15,6 @@ Link from an operator binary that already embeds `github.com/subosito/daigate`.
 | Doc | Package | Purpose |
 |-----|---------|---------|
 | [compose.md](compose.md) | `compose` | `ExtAdapters()`, `AllAdapters()`, `FromConfig()` |
-| [adapters/elevenlabs.md](adapters/elevenlabs.md) | `adapters/elevenlabs` | OpenAI speech → ElevenLabs TTS |
 | [vault.md](vault.md) | `vault` | KV v2 backend (`vault`, `hybrid`) |
 | [issuer-email.md](issuer-email.md) | `issuer/email` | Admin-plane email OTP issuer |
 | [register.md](register.md) | `vault/register`, `issuer/email/register` | Link-time hooks into daigate core |
@@ -45,8 +44,6 @@ Gateway yaml (`daigate.yaml`, `providers.yaml`) lives in the operator repo. Comp
 ```text
 daigate-extensions/
   compose/
-  adapters/
-    elevenlabs/
   vault/
     register/
   issuer/email/

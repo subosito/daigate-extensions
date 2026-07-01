@@ -13,7 +13,6 @@ Link from a binary that already embeds `github.com/subosito/daigate`. No standal
 | Package | Doc | Purpose |
 |---------|-----|---------|
 | `compose` | [docs/compose.md](docs/compose.md) | `ExtAdapters()`, `AllAdapters()`, `FromConfig()` |
-| `adapters/elevenlabs` | [docs/adapters/elevenlabs.md](docs/adapters/elevenlabs.md) | OpenAI speech → ElevenLabs TTS |
 | `vault` | [docs/vault.md](docs/vault.md) | KV v2 backend (`vault`, `hybrid`) |
 | `issuer/email` | [docs/issuer-email.md](docs/issuer-email.md) | Admin-plane email OTP + optional setup UI |
 | `*/register` | [docs/register.md](docs/register.md) | Link-time hooks (`init()` → daigate gateway) |
@@ -47,7 +46,6 @@ Gateway yaml (`daigate.yaml`, `providers.yaml`) and secrets belong in the **oper
 
 ```text
 compose/
-adapters/elevenlabs/
 vault/ + vault/register/
 issuer/email/ + issuer/email/register/
 docs/

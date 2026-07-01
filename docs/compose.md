@@ -10,7 +10,7 @@ Wiring helpers for linking extension translate adapters into a daigate operator 
 
 | Function | Returns |
 |----------|---------|
-| `ExtAdapters()` | Optional vendor translate adapters shipped in this module (e.g. ElevenLabs speech) |
+| `ExtAdapters()` | Optional vendor translate adapters shipped in this module (currently none) |
 | `AllAdapters()` | Core `passthrough` + `ExtAdapters()` |
 | `FromConfig(enable []string)` | Filtered `*adaptersdk.Registry` from `daigate.yaml` `adapters.enable` |
 
@@ -42,7 +42,4 @@ Additional translate adapters can be passed alongside `ExtAdapters()` in the ope
 ```yaml
 adapters:
   enable: [passthrough]              # required for chat/embed/media relay
-  # enable: [passthrough, elevenlabs]
 ```
-
-See [adapters/elevenlabs.md](adapters/elevenlabs.md) for ElevenLabs wiring.

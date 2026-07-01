@@ -13,7 +13,7 @@ daigate core exposes link-time hooks:
 | `gateway.RegisterCredentialBackend` | `vault/register` → `vault`, `hybrid` |
 | `gateway.RegisterAdminIssuer` | `issuer/email/register` → `email` |
 
-Translate adapters (ElevenLabs, …) do **not** use this pattern — wire them through [`compose`](compose.md) at serve time.
+Translate adapters do **not** use this pattern — wire them through [`compose`](compose.md) at serve time.
 
 Keeping `register` in a subpackage (not the main `vault` or `issuer/email` package) means importing types/helpers for tests does not pull backend/issuer wiring into your binary.
 

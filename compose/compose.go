@@ -3,15 +3,12 @@ package compose
 import (
 	"github.com/subosito/daigate/adaptersdk"
 	corecompose "github.com/subosito/daigate/compose"
-	"github.com/subosito/daigate-extensions/adapters/elevenlabs"
 	"github.com/subosito/daigate/passthrough"
 )
 
 // ExtAdapters returns optional vendor translate adapters shipped in this module.
 func ExtAdapters() []adaptersdk.Adapter {
-	return []adaptersdk.Adapter{
-		elevenlabs.New(),
-	}
+	return nil
 }
 
 // AllAdapters returns core passthrough plus ExtAdapters — convenience for operator binaries.
